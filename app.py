@@ -5,7 +5,7 @@ structures = [
     {"name": "Sole Proprietorship", "owners": ["1"], "liability": ["Personal"], "management": "Owner makes all decisions", "makeProfits": "Yes", "profitSharing": "Owner keeps all profits", "funding": "Personal funds", "easeOfSetup": 1, "publicFundraising": "Not allowed"},
     {"name": "General Partnership", "owners": ["More than one"], "liability": ["Shared"], "management": "Partners share decisions", "makeProfits": "Yes", "profitSharing": "Shared equally", "funding": "Partners' contributions", "easeOfSetup": 2, "publicFundraising": "Not allowed"},
     {"name": "Limited Liability Partnership (LLP)", "owners": ["More than one"], "liability": ["Limited"], "management": "Partners share decisions", "makeProfits": "Yes", "profitSharing": "According to agreement", "funding": "Partners' contributions", "easeOfSetup": 3, "publicFundraising": "Not allowed"},
-    {"name": "Limited Liability Company (LLC)", "owners": ["More than one"], "liability": ["Limited"], "management": "Owner or managers", "makeProfits": "Yes", "profitSharing": "According to agreement", "funding": "Personal funds and loans", "easeOfSetup": 3, "publicFundraising": "Not allowed"},
+    {"name": "Limited Liability Company (LLC)", "owners": ["One or more"], "liability": ["Limited"], "management": "Owner or managers", "makeProfits": "Yes", "profitSharing": "According to agreement", "funding": "Personal funds and loans", "easeOfSetup": 3, "publicFundraising": "Not allowed"},
     {"name": "S Corporation (S-Corp)", "owners": ["One or more"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "Yes", "profitSharing": "Based on shares", "funding": "Sale of shares", "easeOfSetup": 4, "publicFundraising": "Allowed"},
     {"name": "C Corporation (C-Corp)", "owners": ["One or more"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "Yes", "profitSharing": "Based on shares", "funding": "Sale of stocks", "easeOfSetup": 5, "publicFundraising": "Allowed"},
     {"name": "Cooperative", "owners": ["More than one"], "liability": ["Limited"], "management": "Democratic", "makeProfits": "Yes", "profitSharing": "Based on usage", "funding": "Members' contributions and loans", "easeOfSetup": 4, "publicFundraising": "Allowed"},
@@ -51,7 +51,7 @@ funding = st.selectbox('How will you get funds for the business?', [
 easeOfSetup = st.slider('How easy do you want it to be to set up?', 1, 5, 3)
 publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Allowed', 'Not allowed'])
 
-# Improved scoring system
+# Updated scoring system
 def recommend_structure():
     scores = []
     
@@ -60,7 +60,7 @@ def recommend_structure():
         
         # Critical criteria with higher weight
         if (owners == 'One person' and '1' in s['owners']) or (owners == 'Two or more people' and 'More than one' in s['owners']):
-            score += 3  # Higher weight for ownership match
+            score += 2  # Higher weight for ownership match
         
         if liability == 'You are personally responsible for all debts and actions of the business' and s['liability'][0] == 'Personal':
             score += 3
