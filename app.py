@@ -91,16 +91,124 @@ def recommend_structure():
         
         s['score'] = score
     
-    # Sort structures by score and return top recommendations
+    # Sort structures by score and return top recommendation
     recommended = sorted(structures, key=lambda x: x['score'], reverse=True)
     return recommended
 
-
-if st.button('Find My Best Business Structure'):
+# Detailed output with call-to-action
+def display_recommendation():
     results = recommend_structure()
     if results:
-        st.write('### Recommended Business Structures:')
-        for structure in results:
-            st.write(f"- **{structure['name']}**: {structure['management']} with {structure['liability']} liability. Profits: {structure['makeProfits']}. Funding: {structure['funding']}. Ease of setup: {structure['easeOfSetup']}. Score: {structure['score']}")
+        top_structure = results[0]  # Get the top recommendation
+        st.write(f"### Recommended Business Structure: **{top_structure['name']}**")
+        
+        # Descriptions of each business structure
+        descriptions = {
+            'Sole Proprietorship': {
+                'advantages': [
+                    'Simple and inexpensive to establish and operate.',
+                    'Owner has full control over all business decisions.',
+                    'All profits go directly to the owner.'
+                ],
+                'disadvantages': [
+                    'Owner is personally liable for all business debts and actions.',
+                    'Limited ability to raise funds or attract investors.'
+                ]
+            },
+            'General Partnership': {
+                'advantages': [
+                    'Simple to establish with shared decision-making among partners.',
+                    'Combined resources and expertise of partners.',
+                    'Profits are shared among partners.'
+                ],
+                'disadvantages': [
+                    'Partners are jointly personally liable for all business debts and actions.',
+                    'Potential for conflicts between partners.'
+                ]
+            },
+            'Limited Liability Partnership (LLP)': {
+                'advantages': [
+                    'Limited liability protection for partners.',
+                    'Flexibility in management and profit-sharing arrangements.',
+                    'Each partner’s personal liability is limited to their investment.'
+                ],
+                'disadvantages': [
+                    'More complex and costly to establish compared to a general partnership.',
+                    'Potential for limited access to capital and financing.'
+                ]
+            },
+            'Limited Liability Company (LLC)': {
+                'advantages': [
+                    'Limited liability protection for owners.',
+                    'Flexible management structure and profit distribution.',
+                    'Pass-through taxation or option for corporate taxation.'
+                ],
+                'disadvantages': [
+                    'More complex and costly to establish compared to a sole proprietorship or partnership.',
+                    'State laws regarding LLCs vary and can be complex.'
+                ]
+            },
+            'S Corporation (S-Corp)': {
+                'advantages': [
+                    'Limited liability protection for owners.',
+                    'Pass-through taxation avoiding double taxation.',
+                    'Ability to raise funds through the sale of shares.'
+                ],
+                'disadvantages': [
+                    'Restrictions on the number and type of shareholders.',
+                    'More complex and costly to establish and maintain.'
+                ]
+            },
+            'C Corporation (C-Corp)': {
+                'advantages': [
+                    'Limited liability protection for owners.',
+                    'Unlimited potential for raising funds through stock sales.',
+                    'Ability to attract investors with stock options.'
+                ],
+                'disadvantages': [
+                    'Double taxation on profits (corporate and personal level).',
+                    'More complex and costly to establish and maintain.'
+                ]
+            },
+            'Cooperative': {
+                'advantages': [
+                    'Democratic decision-making process.',
+                    'Limited liability protection for members.',
+                    'Profits are distributed based on members’ usage or participation.'
+                ],
+                'disadvantages': [
+                    'More complex decision-making due to the democratic process.',
+                    'Limited ability to raise funds compared to corporations.'
+                ]
+            },
+            'Non-Profit': {
+                'advantages': [
+                    'Tax-exempt status if qualified as a charitable organization.',
+                    'Limited liability protection for directors and officers.',
+                    'Ability to receive donations and grants.'
+                ],
+                'disadvantages': [
+                    'Prohibition on distributing profits to members or directors.',
+                    'Strict regulatory requirements and oversight.'
+                ]
+            }
+        }
+
+        st.write("#### Advantages:")
+        for advantage in descriptions[top_structure['name']]['advantages']:
+            st.write(f"- {advantage}")
+        
+        st.write("#### Disadvantages:")
+        for disadvantage in descriptions[top_structure['name']]['disadvantages']:
+            st.write(f"- {disadvantage}")
+
+        st.write(
+            "### Next Steps"
+            "\n- Consult with a legal expert or business advisor to further refine your choice."
+            "\n- Research the specific legal and regulatory requirements for your chosen structure."
+            "\n- Prepare the necessary documents and follow the registration process for your jurisdiction."
+        )
     else:
-        st.write("No matching business structure found. Try adjusting your preferences.")
+        st.write("No recommendations found based on the provided criteria.")
+
+display_recommendation()
