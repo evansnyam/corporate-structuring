@@ -31,24 +31,40 @@ easeOfSetup = st.slider('How easy do you want it to be to set up?', 1, 5, 3)
 publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Allowed', 'Not allowed'])
 
 def recommend_structure():
-    # Recommend based on user input
-    best_structures = [s for s in structures if
-        s['owners'] == owners and
-        s['liability'] == liability and
-        s['management'] == management and
-        s['makeProfits'] == makeProfits and
-        s['profitSharing'] == profitSharing and
-        s['funding'] == funding and
-        s['easeOfSetup'] <= easeOfSetup and
-        s['publicFundraising'] == publicFundraising
-    ]
-    return best_structures
+    # Match criteria and calculate scores
+    scores = []
+    
+    for s in structures:
+        score = 0
+        
+        if s['owners'] == owners:
+            score += 1
+        if s['liability'] == liability:
+            score += 1
+        if s['management'] == management:
+            score += 1
+        if s['makeProfits'] == makeProfits:
+            score += 1
+        if s['profitSharing'] == profitSharing:
+            score += 1
+        if s['funding'] == funding:
+            score += 1
+        if s['easeOfSetup'] <= easeOfSetup:
+            score += 1
+        if s['publicFundraising'] == publicFundraising:
+            score += 1
+        
+        s['score'] = score
+
+    # Sort structures by score and select top recommendations
+    recommended = sorted(structures, key=lambda x: x['score'], reverse=True)
+    return recommended
 
 if st.button('Find My Best Business Structure'):
     results = recommend_structure()
     if results:
         st.write('### Recommended Business Structures:')
         for structure in results:
-            st.write(f"- **{structure['name']}**: {structure['management']} with {structure['liability']} liability. Profits: {structure['makeProfits']}. Funding: {structure['funding']}. Ease of setup: {structure['easeOfSetup']}.")
+            st.write(f"- **{structure['name']}**: {structure['management']} with {structure['liability']} liability. Profits: {structure['makeProfits']}. Funding: {structure['funding']}. Ease of setup: {structure['easeOfSetup']}. Score: {structure['score']}")
     else:
         st.write("No matching business structure found. Try adjusting your preferences.")
