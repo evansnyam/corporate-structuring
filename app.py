@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Business structures data with improved descriptions
+# Business structures data
 structures = [
     {"name": "Sole Proprietorship", "owners": ["1"], "liability": ["Personal"], "management": "Owner makes all decisions", "makeProfits": "Yes", "profitSharing": "Owner keeps all profits", "funding": "Personal funds", "easeOfSetup": 1, "publicFundraising": "Not allowed"},
     {"name": "General Partnership", "owners": ["More than one"], "liability": ["Shared"], "management": "Partners share decisions", "makeProfits": "Yes", "profitSharing": "Shared equally", "funding": "Partners' contributions", "easeOfSetup": 2, "publicFundraising": "Not allowed"},
@@ -51,34 +51,46 @@ funding = st.selectbox('How will you get funds for the business?', [
 easeOfSetup = st.slider('How easy do you want it to be to set up?', 1, 5, 3)
 publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Allowed', 'Not allowed'])
 
+# Improved scoring system
 def recommend_structure():
-    # Match criteria and calculate scores
     scores = []
     
     for s in structures:
         score = 0
         
-        # Matching ownership criteria
+        # Critical criteria with higher weight
         if (owners == 'One person' and '1' in s['owners']) or (owners == 'Two or more people' and 'More than one' in s['owners']):
-            score += 1
-        if s['liability'][0] == liability:
-            score += 1
+            score += 3  # Higher weight for ownership match
+        
+        if liability == 'You are personally responsible for all debts and actions of the business' and s['liability'][0] == 'Personal':
+            score += 3
+        elif liability == 'Responsibility is shared among partners' and s['liability'][0] == 'Shared':
+            score += 3
+        elif liability == 'Your liability is limited to the amount you invest in the business' and s['liability'][0] == 'Limited':
+            score += 3
+        
+        # Other criteria
         if s['management'] == management:
-            score += 1
+            score += 2
+        
         if s['makeProfits'] == makeProfits:
-            score += 1
+            score += 2
+        
         if s['profitSharing'] == profitSharing:
-            score += 1
+            score += 2
+        
         if s['funding'] == funding:
             score += 1
+        
         if s['easeOfSetup'] <= easeOfSetup:
             score += 1
+        
         if s['publicFundraising'] == publicFundraising:
             score += 1
         
         s['score'] = score
-
-    # Sort structures by score and select top recommendations
+    
+    # Sort structures by score and return top recommendations
     recommended = sorted(structures, key=lambda x: x['score'], reverse=True)
     return recommended
 
