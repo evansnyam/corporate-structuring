@@ -69,11 +69,12 @@ def recommend_structure():
         elif liability == 'Your liability is limited to the amount you invest in the business' and s['liability'][0] == 'Limited':
             score += 3
         
+        # Increase weight for profit-related match
+        if s['makeProfits'] == makeProfits:
+            score += 5  # Increased points for matching profit criterion
+        
         # Other criteria
         if s['management'] == management:
-            score += 2
-        
-        if s['makeProfits'] == makeProfits:
             score += 2
         
         if s['profitSharing'] == profitSharing:
@@ -93,6 +94,7 @@ def recommend_structure():
     # Sort structures by score and return top recommendations
     recommended = sorted(structures, key=lambda x: x['score'], reverse=True)
     return recommended
+
 
 if st.button('Find My Best Business Structure'):
     results = recommend_structure()
