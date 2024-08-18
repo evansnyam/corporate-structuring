@@ -23,8 +23,23 @@ st.write(
 # User input
 owners = st.selectbox('How many people will own the business?', ['One person', 'Two or more people'])
 
-# Profit-related question is now second
+# Profit-related question
 makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
+
+if makeProfits == 'Yes':
+    # Display profit sharing and public fundraising questions if the business will make profits
+    profitSharing = st.selectbox('How will profits be shared?', [
+        'One person keeps all profits', 
+        'Profits are shared equally among owners', 
+        'Profits are distributed based on an agreement', 
+        'Profits are shared based on usage or participation'
+    ])
+    publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Yes', 'No'])
+    publicFundraising = "Allowed" if publicFundraising == "Yes" else "Not allowed"
+else:
+    # Hide profit sharing and public fundraising questions if the business will not make profits
+    profitSharing = 'None'
+    publicFundraising = 'Not allowed'
 
 liability = st.selectbox('How do you want to handle legal responsibility for debts and actions?', [
     'You are personally responsible for all debts and actions of the business', 
@@ -39,14 +54,6 @@ management = st.selectbox('How will decisions be made?', [
     'Decisions are made democratically by all members'
 ])
 
-profitSharing = st.selectbox('How will profits be shared?', [
-    'One person keeps all profits', 
-    'Profits are shared equally among owners', 
-    'Profits are distributed based on an agreement', 
-    'Profits are shared based on usage or participation', 
-    'No profits are generated or shared'
-])
-
 # Rephrased funding question
 funding = st.selectbox('Will you raise funds by selling shares or stocks?', [
     'No, only personal funds will be used', 
@@ -55,13 +62,6 @@ funding = st.selectbox('Will you raise funds by selling shares or stocks?', [
     'Yes, by selling stocks', 
     'No, funds will come from donations and grants'
 ])
-
-# Public fundraising question with Yes/No options
-publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Yes', 'No'])
-
-# Translate Yes/No responses to match system values
-makeProfits = "Yes" if makeProfits == "Yes" else "No"
-publicFundraising = "Allowed" if publicFundraising == "Yes" else "Not allowed"
 
 # Updated scoring system
 def recommend_structure():
@@ -85,17 +85,19 @@ def recommend_structure():
         if s['makeProfits'] == makeProfits:
             score += 5  # Increased points for matching profit criterion
         
+        # Only score profit-sharing and public fundraising if profits are being made
+        if makeProfits == 'Yes':
+            if s['profitSharing'] == profitSharing:
+                score += 2
+            
+            if s['publicFundraising'] == publicFundraising:
+                score += 1
+        
         # Other criteria
         if s['management'] == management:
             score += 2
         
-        if s['profitSharing'] == profitSharing:
-            score += 2
-        
         if s['funding'] == funding:
-            score += 1
-        
-        if s['publicFundraising'] == publicFundraising:
             score += 1
         
         s['score'] = score
@@ -186,15 +188,15 @@ def display_recommendation():
                     'Limited liability protection for members.'
                 ],
                 'disadvantages': [
-                    'Complex and costly to establish and manage.',
-                    'Limited access to capital compared to corporations.'
+                    'Decision-making can be slower and more complex.',
+                    'Limited ability to raise capital from outside sources.'
                 ]
             },
             'Non-Profit': {
                 'advantages': [
-                    'Eligible for tax-exempt status.',
-                    'Can attract funding through donations and grants.',
-                    'Mission-driven focus, not profit-driven.'
+                    'Exempt from paying income taxes.',
+                    'Ability to receive donations and grants.',
+                    'Limited liability protection for directors and officers.'
                 ],
                 'disadvantages': [
                     'Profits cannot be distributed to owners or members.',
