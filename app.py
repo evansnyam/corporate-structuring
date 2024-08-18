@@ -27,9 +27,11 @@ owners = st.selectbox('How many people will own the business?', ['One person', '
 if owners == 'One person':
     management_options = ['One person makes all decisions']
     funding_options = ['Only personal funds will be used']
+    liability_options = ['You are personally responsible for all debts and actions of the business']
 else:
     management_options = ['Partners share decisions', 'Decisions are made by managers or a board of directors', 'Decisions are made democratically by all members']
     funding_options = ['Partners\' contributions', 'Personal funds and loans', 'Members\' contributions and loans']
+    liability_options = ['Responsibility is shared among partners', 'Your liability is limited to the amount you invest in the business']
 
 # Profit-related question
 makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
@@ -49,11 +51,7 @@ else:
     profitSharing = 'None'
     publicFundraising = 'Not allowed'
 
-liability = st.selectbox('How do you want to handle legal responsibility for debts and actions?', [
-    'You are personally responsible for all debts and actions of the business', 
-    'Responsibility is shared among partners', 
-    'Your liability is limited to the amount you invest in the business'
-])
+liability = st.selectbox('How do you want to handle legal responsibility for debts and actions?', liability_options)
 
 management = st.selectbox('How will decisions be made?', management_options)
 
@@ -174,8 +172,8 @@ def display_recommendation():
                     'Ability to attract investors with stock options.'
                 ],
                 'disadvantages': [
-                    'Double taxation on profits (corporate and personal level).',
-                    'More complex and costly to establish and maintain.'
+                    'Double taxation on profits (corporate tax and dividend tax).',
+                    'More complex and costly to establish and operate.'
                 ]
             },
             'Cooperative': {
