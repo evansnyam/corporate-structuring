@@ -33,6 +33,8 @@ management = st.selectbox('How will decisions be made?', [
     'Decisions are made by managers or a board of directors', 
     'Decisions are made democratically by all members'
 ])
+
+# Updated profit question with Yes/No options
 makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
 profitSharing = st.selectbox('How will profits be shared?', [
     'One person keeps all profits', 
@@ -48,8 +50,15 @@ funding = st.selectbox('How will you get funds for the business?', [
     'Sale of shares or stocks', 
     'Donations and grants'
 ])
+
 easeOfSetup = st.slider('How easy do you want it to be to set up?', 1, 5, 3)
-publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Allowed', 'Not allowed'])
+
+# Updated public fundraising question with Yes/No options
+publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Yes', 'No'])
+
+# Translate Yes/No responses to match system values
+makeProfits = "Yes" if makeProfits == "Yes" else "No"
+publicFundraising = "Allowed" if publicFundraising == "Yes" else "Not allowed"
 
 # Updated scoring system
 def recommend_structure():
@@ -172,43 +181,50 @@ def display_recommendation():
             },
             'Cooperative': {
                 'advantages': [
-                    'Democratic decision-making process.',
-                    'Limited liability protection for members.',
-                    'Profits are distributed based on members’ usage or participation.'
+                    'Democratic management by members.',
+                    'Profits are distributed based on member participation.',
+                    'Limited liability protection for members.'
                 ],
                 'disadvantages': [
-                    'More complex decision-making due to the democratic process.',
-                    'Limited ability to raise funds compared to corporations.'
+                    'Complex and costly to establish and manage.',
+                    'Limited access to capital compared to corporations.'
                 ]
             },
             'Non-Profit': {
                 'advantages': [
-                    'Tax-exempt status if qualified as a charitable organization.',
-                    'Limited liability protection for directors and officers.',
-                    'Ability to receive donations and grants.'
+                    'Eligible for tax-exempt status.',
+                    'Can attract funding through donations and grants.',
+                    'Mission-driven focus can attract volunteers and supporters.'
                 ],
                 'disadvantages': [
-                    'Prohibition on distributing profits to members or directors.',
-                    'Strict regulatory requirements and oversight.'
+                    'Strict regulations and reporting requirements.',
+                    'Cannot distribute profits to owners or members.'
                 ]
             }
         }
-
-        st.write("#### Advantages:")
+        
+        st.write("### Description")
+        st.write("**Advantages:**")
         for advantage in descriptions[top_structure['name']]['advantages']:
             st.write(f"- {advantage}")
         
-        st.write("#### Disadvantages:")
+        st.write("**Disadvantages:**")
         for disadvantage in descriptions[top_structure['name']]['disadvantages']:
             st.write(f"- {disadvantage}")
+        
+        st.write(f"This structure is suitable based on your answers regarding ownership, liability, management, profits, and other criteria. You can start with this and adjust as needed.")
 
-        st.write(
-            "### Next Steps"
-            "\n- Consult with a legal expert or business advisor to further refine your choice."
-            "\n- Research the specific legal and regulatory requirements for your chosen structure."
-            "\n- Prepare the necessary documents and follow the registration process for your jurisdiction."
-        )
+        # Call-to-action with option to review alternatives
+        if st.button('See More Options'):
+            st.write("### Alternative Business Structures")
+            for structure in results[1:]:
+                st.write(f"**{structure['name']}** (Score: {structure['score']})")
+                st.write(f"- Liability: {structure['liability'][0]}")
+                st.write(f"- Management: {structure['management']}")
+                st.write(f"- Ease of Setup: {structure['easeOfSetup']}")
+                st.write("---")
     else:
-        st.write("No recommendations found based on the provided criteria.")
+        st.write("Sorry, we couldn't find a suitable business structure for your inputs. Please try different options.")
 
+# Display the recommendation
 display_recommendation()
