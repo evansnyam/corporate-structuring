@@ -21,6 +21,10 @@ st.write(
 )
 
 # User input
+country = st.text_input('Which country will your business operate in?')
+business_description = st.text_input('What type of business are you starting? (e.g., salon, law firm)')
+
+# Ownership and other details
 owners = st.selectbox('How many people will own the business?', ['One person', 'Two or more people'])
 
 # Dynamic options based on ownership
