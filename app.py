@@ -2,14 +2,14 @@ import streamlit as st
 
 # Business structures data
 structures = [
-    {"name": "Sole Proprietorship", "owners": ["1"], "liability": ["Personal"], "management": "Owner makes all decisions", "makeProfits": "Yes", "profitSharing": "Owner keeps all profits", "funding": "Personal funds", "easeOfSetup": 1, "publicFundraising": "Not allowed"},
-    {"name": "General Partnership", "owners": ["More than one"], "liability": ["Shared"], "management": "Partners share decisions", "makeProfits": "Yes", "profitSharing": "Shared equally", "funding": "Partners' contributions", "easeOfSetup": 2, "publicFundraising": "Not allowed"},
-    {"name": "Limited Liability Partnership (LLP)", "owners": ["More than one"], "liability": ["Limited"], "management": "Partners share decisions", "makeProfits": "Yes", "profitSharing": "According to agreement", "funding": "Partners' contributions", "easeOfSetup": 3, "publicFundraising": "Not allowed"},
-    {"name": "Limited Liability Company (LLC)", "owners": ["One or more"], "liability": ["Limited"], "management": "Owner or managers", "makeProfits": "Yes", "profitSharing": "According to agreement", "funding": "Personal funds and loans", "easeOfSetup": 3, "publicFundraising": "Not allowed"},
-    {"name": "S Corporation (S-Corp)", "owners": ["One or more"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "Yes", "profitSharing": "Based on shares", "funding": "Sale of shares", "easeOfSetup": 4, "publicFundraising": "Allowed"},
-    {"name": "C Corporation (C-Corp)", "owners": ["One or more"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "Yes", "profitSharing": "Based on shares", "funding": "Sale of stocks", "easeOfSetup": 5, "publicFundraising": "Allowed"},
-    {"name": "Cooperative", "owners": ["More than one"], "liability": ["Limited"], "management": "Democratic", "makeProfits": "Yes", "profitSharing": "Based on usage", "funding": "Members' contributions and loans", "easeOfSetup": 4, "publicFundraising": "Allowed"},
-    {"name": "Non-Profit", "owners": ["More than one"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "No", "profitSharing": "None", "funding": "Donations and grants", "easeOfSetup": 5, "publicFundraising": "Allowed"}
+    {"name": "Sole Proprietorship", "owners": ["1"], "liability": ["Personal"], "management": "Owner makes all decisions", "makeProfits": "Yes", "profitSharing": "Owner keeps all profits", "funding": "Personal funds", "publicFundraising": "Not allowed"},
+    {"name": "General Partnership", "owners": ["More than one"], "liability": ["Shared"], "management": "Partners share decisions", "makeProfits": "Yes", "profitSharing": "Shared equally", "funding": "Partners' contributions", "publicFundraising": "Not allowed"},
+    {"name": "Limited Liability Partnership (LLP)", "owners": ["More than one"], "liability": ["Limited"], "management": "Partners share decisions", "makeProfits": "Yes", "profitSharing": "According to agreement", "funding": "Partners' contributions", "publicFundraising": "Not allowed"},
+    {"name": "Limited Liability Company (LLC)", "owners": ["One or more"], "liability": ["Limited"], "management": "Owner or managers", "makeProfits": "Yes", "profitSharing": "According to agreement", "funding": "Personal funds and loans", "publicFundraising": "Not allowed"},
+    {"name": "S Corporation (S-Corp)", "owners": ["One or more"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "Yes", "profitSharing": "Based on shares", "funding": "Sale of shares", "publicFundraising": "Allowed"},
+    {"name": "C Corporation (C-Corp)", "owners": ["One or more"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "Yes", "profitSharing": "Based on shares", "funding": "Sale of stocks", "publicFundraising": "Allowed"},
+    {"name": "Cooperative", "owners": ["More than one"], "liability": ["Limited"], "management": "Democratic", "makeProfits": "Yes", "profitSharing": "Based on usage", "funding": "Members' contributions and loans", "publicFundraising": "Allowed"},
+    {"name": "Non-Profit", "owners": ["More than one"], "liability": ["Limited"], "management": "Board of directors", "makeProfits": "No", "profitSharing": "None", "funding": "Donations and grants", "publicFundraising": "Allowed"}
 ]
 
 # Streamlit UI
@@ -34,7 +34,7 @@ management = st.selectbox('How will decisions be made?', [
     'Decisions are made democratically by all members'
 ])
 
-# Updated profit question with Yes/No options
+# Profit-related question with Yes/No options
 makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
 profitSharing = st.selectbox('How will profits be shared?', [
     'One person keeps all profits', 
@@ -43,17 +43,17 @@ profitSharing = st.selectbox('How will profits be shared?', [
     'Profits are shared based on usage or participation', 
     'No profits are generated or shared'
 ])
-funding = st.selectbox('How will you get funds for the business?', [
-    'Only personal funds', 
-    'Contributions from partners', 
-    'Personal funds and loans', 
-    'Sale of shares or stocks', 
-    'Donations and grants'
+
+# Rephrased funding question
+funding = st.selectbox('Will you raise funds by selling shares or stocks?', [
+    'No, only personal funds will be used', 
+    'No, funds will be contributed by partners', 
+    'Yes, by selling shares', 
+    'Yes, by selling stocks', 
+    'No, funds will come from donations and grants'
 ])
 
-easeOfSetup = st.slider('How easy do you want it to be to set up?', 1, 5, 3)
-
-# Updated public fundraising question with Yes/No options
+# Public fundraising question with Yes/No options
 publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Yes', 'No'])
 
 # Translate Yes/No responses to match system values
@@ -90,9 +90,6 @@ def recommend_structure():
             score += 2
         
         if s['funding'] == funding:
-            score += 1
-        
-        if s['easeOfSetup'] <= easeOfSetup:
             score += 1
         
         if s['publicFundraising'] == publicFundraising:
@@ -194,11 +191,11 @@ def display_recommendation():
                 'advantages': [
                     'Eligible for tax-exempt status.',
                     'Can attract funding through donations and grants.',
-                    'Mission-driven focus can attract volunteers and supporters.'
+                    'Mission-driven focus, not profit-driven.'
                 ],
                 'disadvantages': [
-                    'Strict regulations and reporting requirements.',
-                    'Cannot distribute profits to owners or members.'
+                    'Profits cannot be distributed to owners or members.',
+                    'Strict compliance and reporting requirements.'
                 ]
             }
         }
@@ -221,7 +218,6 @@ def display_recommendation():
                 st.write(f"**{structure['name']}** (Score: {structure['score']})")
                 st.write(f"- Liability: {structure['liability'][0]}")
                 st.write(f"- Management: {structure['management']}")
-                st.write(f"- Ease of Setup: {structure['easeOfSetup']}")
                 st.write("---")
     else:
         st.write("Sorry, we couldn't find a suitable business structure for your inputs. Please try different options.")
