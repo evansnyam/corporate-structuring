@@ -23,6 +23,14 @@ st.write(
 # User input
 owners = st.selectbox('How many people will own the business?', ['One person', 'Two or more people'])
 
+# Dynamic options based on ownership
+if owners == 'One person':
+    management_options = ['One person makes all decisions']
+    funding_options = ['Only personal funds will be used']
+else:
+    management_options = ['Partners share decisions', 'Decisions are made by managers or a board of directors', 'Decisions are made democratically by all members']
+    funding_options = ['Partners\' contributions', 'Personal funds and loans', 'Members\' contributions and loans']
+
 # Profit-related question
 makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
 
@@ -47,21 +55,10 @@ liability = st.selectbox('How do you want to handle legal responsibility for deb
     'Your liability is limited to the amount you invest in the business'
 ])
 
-management = st.selectbox('How will decisions be made?', [
-    'One person makes all decisions', 
-    'Decisions are shared among partners', 
-    'Decisions are made by managers or a board of directors', 
-    'Decisions are made democratically by all members'
-])
+management = st.selectbox('How will decisions be made?', management_options)
 
-# Rephrased funding question
-funding = st.selectbox('Will you raise funds by selling shares or stocks?', [
-    'No, only personal funds will be used', 
-    'No, funds will be contributed by partners', 
-    'Yes, by selling shares', 
-    'Yes, by selling stocks', 
-    'No, funds will come from donations and grants'
-])
+# Updated funding options based on ownership
+funding = st.selectbox('Will you raise funds by selling shares or stocks?', funding_options)
 
 # Updated scoring system
 def recommend_structure():
@@ -183,9 +180,9 @@ def display_recommendation():
             },
             'Cooperative': {
                 'advantages': [
-                    'Democratic management by members.',
-                    'Profits are distributed based on member participation.',
-                    'Limited liability protection for members.'
+                    'Democratic management structure.',
+                    'Limited liability for members.',
+                    'Ability to attract funds through membership contributions and loans.'
                 ],
                 'disadvantages': [
                     'Decision-making can be slower and more complex.',
