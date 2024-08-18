@@ -22,11 +22,16 @@ st.write(
 
 # User input
 owners = st.selectbox('How many people will own the business?', ['One person', 'Two or more people'])
+
+# Profit-related question is now second
+makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
+
 liability = st.selectbox('How do you want to handle legal responsibility for debts and actions?', [
     'You are personally responsible for all debts and actions of the business', 
     'Responsibility is shared among partners', 
     'Your liability is limited to the amount you invest in the business'
 ])
+
 management = st.selectbox('How will decisions be made?', [
     'One person makes all decisions', 
     'Decisions are shared among partners', 
@@ -34,8 +39,6 @@ management = st.selectbox('How will decisions be made?', [
     'Decisions are made democratically by all members'
 ])
 
-# Profit-related question with Yes/No options
-makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
 profitSharing = st.selectbox('How will profits be shared?', [
     'One person keeps all profits', 
     'Profits are shared equally among owners', 
