@@ -1,5 +1,41 @@
 import streamlit as st
 
+# Updated list of countries
+countries = [
+    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+    "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "The Bahamas", 
+    "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin",
+    "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
+    "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon",
+    "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia",
+    "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the",
+    "Costa Rica", "Côte d’Ivoire", "Croatia", "Cuba", "Cyprus", "Czech Republic",
+    "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor (Timor-Leste)",
+    "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia",
+    "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "The Gambia",
+    "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
+    "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India",
+    "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan",
+    "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South",
+    "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho",
+    "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar",
+    "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands",
+    "Mauritania", "Mauritius", "Mexico", "Micronesia, Federated States of", "Moldova",
+    "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar (Burma)",
+    "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger",
+    "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Panama",
+    "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+    "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
+    "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe",
+    "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore",
+    "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "Spain",
+    "Sri Lanka", "Sudan", "Sudan, South", "Suriname", "Sweden", "Switzerland", "Syria",
+    "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago",
+    "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates",
+    "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City",
+    "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+]
+
 # Business structures data
 structures = [
     {"name": "Sole Proprietorship", "owners": ["1"], "liability": ["Personal"], "management": "Owner makes all decisions", "makeProfits": "Yes", "profitSharing": "Owner keeps all profits", "funding": "Personal funds", "publicFundraising": "Not allowed"},
@@ -21,7 +57,7 @@ st.write(
 )
 
 # User input
-country = st.text_input('Which country will your business operate in?')
+country = st.selectbox('Which country will your business operate in?', countries)
 business_description = st.text_input('What type of business are you starting? (e.g., salon, law firm)')
 
 # Ownership and other details
@@ -69,114 +105,104 @@ def recommend_structure():
     for s in structures:
         score = 0
         
-        # Critical criteria with higher weight
-        if (owners == 'One person' and '1' in s['owners']) or (owners == 'Two or more people' and 'More than one' in s['owners']):
-            score += 2  # Higher weight for ownership match
-        
-        if liability == 'You are personally responsible for all debts and actions of the business' and s['liability'][0] == 'Personal':
-            score += 3
-        elif liability == 'Responsibility is shared among partners' and s['liability'][0] == 'Shared':
-            score += 3
-        elif liability == 'Your liability is limited to the amount you invest in the business' and s['liability'][0] == 'Limited':
-            score += 3
-        
-        # Increase weight for profit-related match
-        if s['makeProfits'] == makeProfits:
-            score += 5  # Increased points for matching profit criterion
-        
-        # Only score profit-sharing and public fundraising if profits are being made
-        if makeProfits == 'Yes':
-            if s['profitSharing'] == profitSharing:
-                score += 2
-            
-            if s['publicFundraising'] == publicFundraising:
-                score += 1
-        
-        # Other criteria
-        if s['management'] == management:
-            score += 2
-        
-        if s['funding'] == funding:
+        if s["owners"][0] == "One person" and owners == "One person":
+            score += 1
+        elif s["owners"][0] == "More than one" and owners == "Two or more people":
             score += 1
         
-        s['score'] = score
+        if s["management"] == management:
+            score += 1
+        
+        if s["funding"] == funding:
+            score += 1
+        
+        if s["liability"][0] in liability:
+            score += 1
+        
+        if makeProfits == "Yes" and s["makeProfits"] == "Yes":
+            score += 1
+        elif makeProfits == "No" and s["makeProfits"] == "No":
+            score += 1
+        
+        if profitSharing in s["profitSharing"]:
+            score += 1
+        
+        if publicFundraising == s["publicFundraising"]:
+            score += 1
+        
+        scores.append({"name": s["name"], "score": score, "liability": s["liability"], "management": s["management"], "funding": s["funding"]})
     
-    # Sort structures by score and return top recommendation
-    recommended = sorted(structures, key=lambda x: x['score'], reverse=True)
-    return recommended
+    scores.sort(key=lambda x: x["score"], reverse=True)
+    return scores
 
-# Detailed output with call-to-action
+# Display the recommendation
 def display_recommendation():
     results = recommend_structure()
+    
     if results:
-        top_structure = results[0]  # Get the top recommendation
-        st.write(f"### Recommended Business Structure: **{top_structure['name']}**")
+        top_structure = results[0]
         
-        # Descriptions of each business structure
+        st.write(f"### Recommended Business Structure: {top_structure['name']}")
+        
+        # Show detailed descriptions
         descriptions = {
             'Sole Proprietorship': {
                 'advantages': [
-                    'Simple and inexpensive to establish and operate.',
-                    'Owner has full control over all business decisions.',
-                    'All profits go directly to the owner.'
+                    'Simple to establish and operate.',
+                    'Owner keeps all profits.'
                 ],
                 'disadvantages': [
-                    'Owner is personally liable for all business debts and actions.',
-                    'Limited ability to raise funds or attract investors.'
+                    'Owner is personally liable for all debts and actions.',
+                    'Limited ability to raise funds.'
                 ]
             },
             'General Partnership': {
                 'advantages': [
-                    'Simple to establish with shared decision-making among partners.',
-                    'Combined resources and expertise of partners.',
-                    'Profits are shared among partners.'
+                    'Simple to establish.',
+                    'Shared responsibility among partners.'
                 ],
                 'disadvantages': [
-                    'Partners are jointly personally liable for all business debts and actions.',
-                    'Potential for conflicts between partners.'
+                    'Partners are personally liable for debts and actions.',
+                    'Disagreements between partners can affect the business.'
                 ]
             },
             'Limited Liability Partnership (LLP)': {
                 'advantages': [
-                    'Limited liability protection for partners.',
-                    'Flexibility in management and profit-sharing arrangements.',
-                    'Each partner’s personal liability is limited to their investment.'
+                    'Limited liability for partners.',
+                    'Flexibility in management.'
                 ],
                 'disadvantages': [
-                    'More complex and costly to establish compared to a general partnership.',
-                    'Potential for limited access to capital and financing.'
+                    'More complex to establish than a general partnership.',
+                    'Potential for disagreements among partners.'
                 ]
             },
             'Limited Liability Company (LLC)': {
                 'advantages': [
-                    'Limited liability protection for owners.',
-                    'Flexible management structure and profit distribution.',
-                    'Pass-through taxation or option for corporate taxation.'
+                    'Limited liability for owners.',
+                    'Flexible management structure.'
                 ],
                 'disadvantages': [
-                    'More complex and costly to establish compared to a sole proprietorship or partnership.',
-                    'State laws regarding LLCs vary and can be complex.'
+                    'More complex and costly to establish and operate.'
                 ]
             },
             'S Corporation (S-Corp)': {
                 'advantages': [
                     'Limited liability protection for owners.',
-                    'Pass-through taxation avoiding double taxation.',
-                    'Ability to raise funds through the sale of shares.'
+                    'Ability to raise funds through stock sales.'
                 ],
                 'disadvantages': [
-                    'Restrictions on the number and type of shareholders.',
-                    'More complex and costly to establish and maintain.'
+                    'Strict requirements and regulations.',
+                    'Limited to 100 shareholders.'
                 ]
             },
             'C Corporation (C-Corp)': {
                 'advantages': [
                     'Limited liability protection for owners.',
-                    'Unlimited potential for raising funds through stock sales.',
-                    'Ability to attract investors with stock options.'
+                    'Ability to raise substantial funds through stock sales.',
+                    'Perpetual existence.'
                 ],
                 'disadvantages': [
-                    'Double taxation on profits (corporate tax and dividend tax).',
+                    'Double taxation (corporate tax and dividend tax).',
                     'More complex and costly to establish and operate.'
                 ]
             },
