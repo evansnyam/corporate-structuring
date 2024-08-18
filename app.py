@@ -27,12 +27,6 @@ liability = st.selectbox('How do you want to handle legal responsibility for deb
     'Responsibility is shared among partners', 
     'Your liability is limited to the amount you invest in the business'
 ])
-management = st.selectbox('How will decisions be made?', [
-    'One person makes all decisions', 
-    'Decisions are shared among partners', 
-    'Decisions are made by managers or a board of directors', 
-    'Decisions are made democratically by all members'
-])
 
 # Profit-related question with Yes/No options
 makeProfits = st.selectbox('Will your business make profits?', ['Yes', 'No'])
@@ -44,6 +38,17 @@ profitSharing = st.selectbox('How will profits be shared?', [
     'No profits are generated or shared'
 ])
 
+
+
+
+management = st.selectbox('How will decisions be made?', [
+    'One person makes all decisions', 
+    'Decisions are shared among partners', 
+    'Decisions are made by managers or a board of directors', 
+    'Decisions are made democratically by all members'
+])
+
+
 # Rephrased funding question
 funding = st.selectbox('Will you raise funds by selling shares or stocks?', [
     'No, only personal funds will be used', 
@@ -54,7 +59,7 @@ funding = st.selectbox('Will you raise funds by selling shares or stocks?', [
 ])
 
 # Public fundraising question with Yes/No options
-publicFundraising = st.selectbox('Do you want to raise money from the public?', ['Yes', 'No'])
+publicFundraising = st.selectbox('Do you intend to fundraise?', ['Yes', 'No'])
 
 # Translate Yes/No responses to match system values
 makeProfits = "Yes" if makeProfits == "Yes" else "No"
